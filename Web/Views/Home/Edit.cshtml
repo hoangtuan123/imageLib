@@ -1,0 +1,65 @@
+﻿@model Web.Models.ImageLibraries
+
+@{
+    ViewBag.Title = "Edit";
+    var i = 0;
+    var startNewImage = Model.listImage != null ? Model.listImage.Count() : 0;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+@using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        @Html.TextBoxFor(model => model.id)
+    </div>
+
+    <div class="row">
+        <input type="file" id="upload" name="upload" />
+    </div>
+    <div class="row" id="images">
+        @if (Model.listImage != null)
+        {
+            foreach (var image in Model.listImage)
+            {
+                <div class="col-md-4 img-row">
+                    <img id="image_@i" style="width:100%;" name="image_@i" src="/Upload/@image.image" />
+                    <input type="hidden" id="listImage[@i].image" name="listImage[@i].image" value="@image.image">
+                </div>
+            }
+        }
+    </div>
+    <div>
+        <input type="submit" name="submit" value="submit" />
+    </div>
+}
+
+
+
+<script>
+    var i = @startNewImage;
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = '<img id="image_' + i + '" name="image_' + i + '" src="' + e.target.result + '"/>';
+                var input = '<input type="hidden" id="listImage[' + i + '].image" name="listImage[' + i + '].image" value="' + e.target.result + '">';
+                var divImage = '<div class="col-md-4 img-row">' + img + input + '</div>'
+                $('#images').append(divImage);
+                i = i + 1;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#upload").change(function () {
+        readURL(this);
+    });
+</script>
+
+<style>
+    .img-row {
+        height: 50px;
+    }
+</style>

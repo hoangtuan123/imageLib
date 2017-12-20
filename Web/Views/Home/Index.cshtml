@@ -1,0 +1,52 @@
+﻿@model Web.Models.ImageLibraries
+
+@{
+    ViewBag.Title = "Home Page";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        @Html.TextBoxFor(model => model.id)
+    </div>
+
+    <div class="row">
+        <input type="file" id="upload" name="upload" />
+    </div>
+    <div class="row" id="images">
+
+    </div>
+    <div>
+        <input type="submit" name="submit" value="submit" />
+    </div>
+}
+
+
+
+<script>
+    var i = 0;
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = '<img id="image_' + i + '" name="image_' + i + '" class="col-md-4" src="' + e.target.result + '"/>';
+                var input = '<input type="hidden" id="listImage[' + i + '].image" name="listImage[' + i + '].image" value="' + e.target.result + '">';
+
+                $('#images').append(img + input);
+                i = i + 1;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#upload").change(function () {
+        readURL(this);
+    });
+</script>
